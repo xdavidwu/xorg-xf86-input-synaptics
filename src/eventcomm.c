@@ -47,17 +47,25 @@
  *	Function Definitions
  ****************************************************************************/
 
-static void
+static Bool
+grab_event_device(int fd)
+{
+    int ret;
+    SYSCALL(ret = ioctl(fd, EVIOCGRAB, (pointer)1));
+    return !(ret < 0);
+}
+
+static Bool
 EventDeviceOnHook(LocalDevicePtr local, SynapticsSHM *para)
 {
     if (para->grab_event_device) {
 	/* Try to grab the event device so that data don't leak to /dev/input/mice */
-	int ret;
-	SYSCALL(ret = ioctl(local->fd, EVIOCGRAB, (pointer)1));
-	if (ret < 0) {
+	if(!grab_event_device(local->fd)) {
 	    xf86Msg(X_WARNING, "%s can't grab event device, errno=%d\n",
 		    local->name, errno);
+	    return FALSE;
 	}
+	return TRUE;
     }
 }
 
@@ -279,6 +287,7 @@ EventAutoDevProbe(LocalDevicePtr local)
 	char fname[64];
 	int fd = -1;
 	Bool is_touchpad;
+	Bool is_grabbable;
 
 	sprintf(fname, "%s/%s%d", DEV_INPUT_EVENT, EVENT_DEV_NAME, i);
 	SYSCALL(fd = open(fname, O_RDONLY));
@@ -295,7 +304,14 @@ EventAutoDevProbe(LocalDevicePtr local)
 	noent_cnt = 0;
 	have_evdev = TRUE;
 	is_touchpad = event_query_is_touchpad(fd);
-	if (is_touchpad) {
+	/**
+	 * Check whether device can be grabbed. This means there is a race
+	 * condition with EventDeviceOnHook, which can't be solved cleanly
+	 * the way things are done with the current design. One possible
+	 * solution would be to keep the file descriptor open.
+	 */
+	is_grabbable = grab_event_device(fd);
+	if (is_touchpad && is_grabbable) {
 	    xf86Msg(X_PROBED, "%s auto-dev sets device to %s\n",
 		    local->name, fname);
 	    xf86ReplaceStrOption(local->options, "Device", fname);

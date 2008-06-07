@@ -77,7 +77,7 @@ struct SynapticsHwInfo;
 struct CommData;
 
 struct SynapticsProtocolOperations {
-    void (*DeviceOnHook)(LocalDevicePtr local, struct _SynapticsSHM *para);
+    Bool (*DeviceOnHook)(LocalDevicePtr local, struct _SynapticsSHM *para);
     void (*DeviceOffHook)(LocalDevicePtr local);
     Bool (*QueryHardware)(LocalDevicePtr local, struct SynapticsHwInfo *synhw);
     Bool (*ReadHwState)(LocalDevicePtr local, struct SynapticsHwInfo *synhw,

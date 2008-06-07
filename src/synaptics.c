@@ -601,7 +601,9 @@ DeviceOn(DeviceIntPtr dev)
 	return !Success;
     }
 
-    priv->proto_ops->DeviceOnHook(local, priv->synpara);
+    if (!priv->proto_ops->DeviceOnHook(local, priv->synpara)) {
+	return !Success;
+    }
 
     priv->comm.buffer = XisbNew(local->fd, 64);
     if (!priv->comm.buffer) {
