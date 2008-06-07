@@ -594,6 +594,9 @@ DeviceOn(DeviceIntPtr dev)
 
     DBG(3, ErrorF("Synaptics DeviceOn called\n"));
 
+    if (xf86Screens[0]->vtSema == FALSE)
+	    return !Success;
+
     SetDeviceAndProtocol(local);
     local->fd = xf86OpenSerial(local->options);
     if (local->fd == -1) {
