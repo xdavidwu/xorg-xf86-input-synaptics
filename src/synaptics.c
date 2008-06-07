@@ -684,10 +684,10 @@ DeviceInit(DeviceIntPtr dev)
 #endif
 			    );
     /* X valuator */
-    xf86InitValuatorAxisStruct(dev, 0, 0, -1, 1, 0, 1);
+    xf86InitValuatorAxisStruct(dev, 0, -1, -1, 1, 0, 1);
     xf86InitValuatorDefaults(dev, 0);
     /* Y valuator */
-    xf86InitValuatorAxisStruct(dev, 1, 0, -1, 1, 0, 1);
+    xf86InitValuatorAxisStruct(dev, 1, -1, -1, 1, 0, 1);
     xf86InitValuatorDefaults(dev, 1);
 #if GET_ABI_MAJOR(ABI_XINPUT_VERSION) == 0
     xf86MotionHistoryAllocate(local);
