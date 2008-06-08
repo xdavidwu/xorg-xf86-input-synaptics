@@ -271,10 +271,15 @@ EventAutoDevProbe(LocalDevicePtr local)
     /* We are trying to find the right eventX device or fall back to
        the psaux protocol and the given device from XF86Config */
     int i;
-    Bool have_evdev = FALSE;
-    int noent_cnt = 0;
+    Bool have_evdev;
+    int noent_cnt;
     const int max_skip = 10;
+    int wait = 0;
+    const int max_wait = 2000;
 
+    while (wait <= max_wait) {
+	have_evdev = FALSE;
+	noent_cnt = 0;
     for (i = 0; ; i++) {
 	char fname[64];
 	int fd = -1;
@@ -296,14 +301,19 @@ EventAutoDevProbe(LocalDevicePtr local)
 	have_evdev = TRUE;
 	is_touchpad = event_query_is_touchpad(fd);
 	if (is_touchpad) {
-	    xf86Msg(X_PROBED, "%s auto-dev sets device to %s\n",
-		    local->name, fname);
+	    xf86Msg(X_PROBED, "%s auto-dev sets device to %s (waited %d msec)\n",
+		    local->name, fname, wait);
 	    xf86ReplaceStrOption(local->options, "Device", fname);
 	    event_query_abs_params(local, fd);
 	    SYSCALL(close(fd));
 	    return TRUE;
 	}
 	SYSCALL(close(fd));
+    }
+	ErrorF("%s waiting 100 msec to become devices ready\n", local->name);
+	usleep(100*1000);
+	wait += 100;
+	ErrorF("%s waiting time total: %d\n", local->name, wait);
     }
     ErrorF("%s no synaptics event device found (checked %d nodes)\n",
 	   local->name, i + 1);
