@@ -85,6 +85,7 @@ usage(void)
     fprintf(stderr, "  -k Ignore modifier keys when monitoring keyboard activity.\n");
     fprintf(stderr, "  -K Like -k but also ignore Modifier+Key combos.\n");
     fprintf(stderr, "  -R Use the XRecord extension.\n");
+    fprintf(stderr, "  -s Use a shared memory area to talk to the touchpad.\n");
     exit(1);
 }
 
@@ -557,7 +558,7 @@ main(int argc, char *argv[])
 #endif
 
     /* Parse command line parameters */
-    while ((c = getopt(argc, argv, "i:m:dtp:kKR?")) != EOF) {
+    while ((c = getopt(argc, argv, "i:m:dtp:kKsR?")) != EOF) {
 	switch(c) {
 	case 'i':
 	    idle_time = atof(optarg);
