@@ -265,7 +265,7 @@ SetDeviceAndProtocol(LocalDevicePtr local)
 	    proto = SYN_PROTO_ALPS;
 	} else { /* default to auto-dev */
 #ifdef BUILD_EVENTCOMM
-	    if (event_proto_operations.AutoDevProbe(local))
+	    if (!device && event_proto_operations.AutoDevProbe(local))
 		proto = SYN_PROTO_EVENT;
 #endif
 	}
