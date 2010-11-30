@@ -2424,8 +2424,11 @@ HandleState(LocalDevicePtr local, struct SynapticsHwState *hw)
     }
 
     /* Post events */
-    if (dx || dy)
-	xf86PostMotionEvent(local->dev, 0, 0, 2, dx, dy);
+    if (finger > FS_UNTOUCHED) {
+        if (dx || dy) {
+            xf86PostMotionEvent(local->dev, 0, 0, 2, dx, dy);
+        }
+    }
 
     if (priv->mid_emu_state == MBE_LEFT_CLICK)
     {
