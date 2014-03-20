@@ -808,8 +808,7 @@ event_query_touch(InputInfoPtr pInfo)
         };
 
         if (mtdev->caps.slot.maximum > 0)
-            priv->max_touches = mtdev->caps.slot.maximum -
-                mtdev->caps.slot.minimum + 1;
+            priv->max_touches = mtdev->caps.slot.maximum + 1;
 
         priv->touch_axes = malloc(priv->num_mt_axes *
                                   sizeof(SynapticsTouchAxisRec));
