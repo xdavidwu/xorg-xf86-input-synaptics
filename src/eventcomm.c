@@ -50,6 +50,9 @@
 #ifndef INPUT_PROP_SEMI_MT
 #define INPUT_PROP_SEMI_MT 0x03
 #endif
+#ifndef INPUT_PROP_TOPBUTTONPAD
+#define INPUT_PROP_TOPBUTTONPAD 0x04
+#endif
 
 #define SYSCALL(call) while (((call) == -1) && (errno == EINTR))
 
@@ -804,6 +807,11 @@ event_query_touch(InputInfoPtr pInfo)
     if (rc >= 0 && BitIsOn(&prop, INPUT_PROP_BUTTONPAD)) {
         xf86IDrvMsg(pInfo, X_INFO, "found clickpad property\n");
         para->clickpad = TRUE;
+    }
+
+    if (rc>= 0 && BitIsOn(&prop, INPUT_PROP_TOPBUTTONPAD)) {
+        xf86IDrvMsg(pInfo, X_INFO, "found top buttonpad property\n");
+        para->has_secondary_buttons = TRUE;
     }
 #endif
 
