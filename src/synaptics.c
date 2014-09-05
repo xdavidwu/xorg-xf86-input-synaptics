@@ -1010,6 +1010,8 @@ DeviceOn(DeviceIntPtr dev)
 static void
 SynapticsReset(SynapticsPrivate * priv)
 {
+    int i;
+
     SynapticsResetHwState(priv->hwState);
     SynapticsResetHwState(priv->local_hw_state);
     SynapticsResetHwState(priv->comm.hwState);
@@ -1039,7 +1041,9 @@ SynapticsReset(SynapticsPrivate * priv)
     priv->prev_z = 0;
     priv->prevFingers = 0;
     priv->num_active_touches = 0;
-    memset(priv->open_slots, 0, priv->num_slots * sizeof(int));
+
+    for (i = 0; i < priv->num_slots; i++)
+        priv->open_slots[i] = -1;
 }
 
 static int
@@ -1336,6 +1340,8 @@ DeviceInit(DeviceIntPtr dev)
 
     InitDeviceProperties(pInfo);
     XIRegisterPropertyHandler(pInfo->dev, SetProperty, NULL, NULL);
+
+    SynapticsReset(priv);
 
     return Success;
 
