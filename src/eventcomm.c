@@ -865,9 +865,6 @@ event_query_touch(InputInfoPtr pInfo)
             AXIS_LABEL_PROP_ABS_MT_BLOB_ID,
             AXIS_LABEL_PROP_ABS_MT_TRACKING_ID,
             AXIS_LABEL_PROP_ABS_MT_PRESSURE,
-            AXIS_LABEL_PROP_ABS_MT_DISTANCE,
-            AXIS_LABEL_PROP_ABS_MT_TOOL_X,
-            AXIS_LABEL_PROP_ABS_MT_TOOL_Y,
         };
 
         if (mtdev->caps.slot.maximum > 0)
@@ -898,14 +895,8 @@ event_query_touch(InputInfoPtr pInfo)
                 case ABS_MT_TRACKING_ID - ABS_MT_TOUCH_MAJOR:
                     break;
 
-                    if (i >= sizeof(labels)/sizeof(labels[0])) {
-                        xf86IDrvMsg(pInfo, X_ERROR,
-                                    "Axis %d out of label range. This is a bug\n",
-                                    i);
-                        priv->touch_axes[axnum].label = NULL;
-                    } else
-                        priv->touch_axes[axnum].label = labels[i];
-
+                default:
+                    priv->touch_axes[axnum].label = labels[i];
                     priv->touch_axes[axnum].min = mtdev->caps.abs[i].minimum;
                     priv->touch_axes[axnum].max = mtdev->caps.abs[i].maximum;
                     /* Kernel provides units/mm, X wants units/m */
