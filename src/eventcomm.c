@@ -320,6 +320,15 @@ event_query_is_touchpad(struct libevdev *evdev, BOOL test_grab)
         libevdev_has_event_code(evdev, EV_ABS, BTN_TOOL_PEN)) /* Don't match wacom tablets */
         goto unwind;
 
+    if (libevdev_has_event_code(evdev, EV_ABS, ABS_MT_SLOT)) {
+        if (libevdev_get_num_slots(evdev) == -1)
+            goto unwind; /* Ignore fake MT devices */
+
+        if (!libevdev_has_event_code(evdev, EV_ABS, ABS_MT_POSITION_X) ||
+            !libevdev_has_event_code(evdev, EV_ABS, ABS_MT_POSITION_Y))
+            goto unwind;
+    }
+
     ret = TRUE;
 
  unwind:
