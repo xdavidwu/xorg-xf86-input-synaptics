@@ -104,6 +104,7 @@ static struct Parameter params[] = {
     {"EdgeMotionMinSpeed",    PT_INT,    0, 1000,  SYNAPTICS_PROP_EDGEMOTION_SPEED,     32,	0},
     {"EdgeMotionMaxSpeed",    PT_INT,    0, 1000,  SYNAPTICS_PROP_EDGEMOTION_SPEED,     32,	1},
     {"EdgeMotionUseAlways",   PT_BOOL,   0, 1,     SYNAPTICS_PROP_EDGEMOTION,   8,	0},
+    {"EdgeMotionScroll",      PT_BOOL,   0, 1,     SYNAPTICS_PROP_EDGEMOTION_SCROLL,     8,	0},
     {"UpDownScrolling",       PT_BOOL,   0, 1,     SYNAPTICS_PROP_BUTTONSCROLLING,  8,	0},
     {"LeftRightScrolling",    PT_BOOL,   0, 1,     SYNAPTICS_PROP_BUTTONSCROLLING,  8,	1},
     {"UpDownScrollRepeat",    PT_BOOL,   0, 1,     SYNAPTICS_PROP_BUTTONSCROLLING_REPEAT,   8,	0},

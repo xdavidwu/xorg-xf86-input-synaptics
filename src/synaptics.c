@@ -717,6 +717,8 @@ set_default_parameters(InputInfoPtr pInfo)
         xf86SetIntOption(opts, "EdgeMotionMaxSpeed", edgeMotionMaxSpeed);
     pars->edge_motion_use_always =
         xf86SetBoolOption(opts, "EdgeMotionUseAlways", FALSE);
+    pars->edge_motion_scroll =
+	xf86SetBoolOption(opts, "EdgeMotionScroll", FALSE);
     if (priv->has_scrollbuttons) {
         pars->updown_button_scrolling =
             xf86SetBoolOption(opts, "UpDownScrolling", TRUE);
@@ -2641,17 +2643,24 @@ HandleScrolling(SynapticsPrivate * priv, struct SynapticsHwState *hw,
         priv->scroll.packets_this_scroll++;
     }
 
+    double dtime = (hw->millis - priv->scroll.last_millis) / 1000.0;
+    int x_edge_speed = 0;
+    int y_edge_speed = 0;
+    if(para->edge_motion_scroll) get_edge_speed(priv, hw, edge, &x_edge_speed, &y_edge_speed);
+    
     if (priv->vert_scroll_edge_on || priv->vert_scroll_twofinger_on) {
         /* + = down, - = up */
-        if (para->scroll_dist_vert != 0 && hw->y != priv->scroll.last_y) {
-            priv->scroll.delta_y += (hw->y - priv->scroll.last_y);
+        if (para->scroll_dist_vert != 0 && (hw->y != priv->scroll.last_y || para->edge_motion_scroll )) {
+            priv->scroll.delta_y += (hw->y - priv->scroll.last_y) + y_edge_speed * dtime;
+	    if (para->edge_motion_scroll && y_edge_speed) delay = MIN(delay, POLL_MS);
             priv->scroll.last_y = hw->y;
         }
     }
     if (priv->horiz_scroll_edge_on || priv->horiz_scroll_twofinger_on) {
         /* + = right, - = left */
-        if (para->scroll_dist_horiz != 0 && hw->x != priv->scroll.last_x) {
-            priv->scroll.delta_x += (hw->x - priv->scroll.last_x);
+        if (para->scroll_dist_horiz != 0 && (hw->x != priv->scroll.last_x || para->edge_motion_scroll )) {
+            priv->scroll.delta_x += (hw->x - priv->scroll.last_x) + x_edge_speed * dtime;
+            if (para->edge_motion_scroll && x_edge_speed) delay = MIN(delay, POLL_MS);
             priv->scroll.last_x = hw->x;
         }
     }
@@ -2670,7 +2679,6 @@ HandleScrolling(SynapticsPrivate * priv, struct SynapticsHwState *hw,
     }
 
     if (priv->scroll.coast_speed_y) {
-        double dtime = (hw->millis - priv->scroll.last_millis) / 1000.0;
         double ddy = para->coasting_friction * dtime;
 
         priv->scroll.delta_y += priv->scroll.coast_speed_y * dtime * abs(para->scroll_dist_vert);
@@ -2686,7 +2694,6 @@ HandleScrolling(SynapticsPrivate * priv, struct SynapticsHwState *hw,
     }
 
     if (priv->scroll.coast_speed_x) {
-        double dtime = (hw->millis - priv->scroll.last_millis) / 1000.0;
         double ddx = para->coasting_friction * dtime;
         priv->scroll.delta_x += priv->scroll.coast_speed_x * dtime * abs(para->scroll_dist_horiz);
         delay = MIN(delay, POLL_MS);

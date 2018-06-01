@@ -181,6 +181,9 @@ If on, edge motion is also used for normal movements.
 If off, edge motion is used only when dragging. Property: "Synaptics Edge
 Motion Always"
 .TP
+.BI "Option \*qEdgeMotionScroll\*q \*q" boolean \*q
+Enable edge motion for scrolling. Property: "Synaptics Edge Motion Scrolling"
+.TP
 .BI "Option \*qMinSpeed\*q \*q" float \*q
 Minimum speed factor. Property: "Synaptics Move Speed"
 .TP
@@ -676,6 +679,8 @@ dragging.
 With EdgeMotionUseAlways set to true, it is also used for normal
 cursor movements.
 .
+With EdgeMotionScroll set to true, it is also used for scrolling.
+
 .LP
 Edge motion speed is calculated by taking into account the amount of
 pressure applied to the touchpad.
@@ -863,6 +868,10 @@ FLOAT, 4 values, min, max, accel, <deprecated>
 
 .TP 7
 .BI "Synaptics Edge Motion Always"
+8 bit (BOOL).
+
+.TP 7
+.BI "Synaptics Edge Motion Scrolling"
 8 bit (BOOL).
 
 .TP 7

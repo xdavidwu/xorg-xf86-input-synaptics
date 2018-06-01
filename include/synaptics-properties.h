@@ -84,6 +84,9 @@
 /* 8 bit (BOOL) */
 #define SYNAPTICS_PROP_EDGEMOTION "Synaptics Edge Motion Always"
 
+/* 8 bit (BOOL) */
+#define SYNAPTICS_PROP_EDGEMOTION_SCROLL "Synaptics Edge Motion Scrolling"
+
 /* 8 bit (BOOL), 2 values, updown, leftright */
 #define SYNAPTICS_PROP_BUTTONSCROLLING "Synaptics Button Scrolling"
 

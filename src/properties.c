@@ -68,6 +68,7 @@ Atom prop_speed = 0;
 Atom prop_edgemotion_pressure = 0;
 Atom prop_edgemotion_speed = 0;
 Atom prop_edgemotion_always = 0;
+Atom prop_edgemotion_scroll = 0;
 Atom prop_buttonscroll = 0;
 Atom prop_buttonscroll_repeat = 0;
 Atom prop_buttonscroll_time = 0;
@@ -281,6 +282,10 @@ InitDeviceProperties(InputInfoPtr pInfo)
     prop_edgemotion_always =
         InitAtom(pInfo->dev, SYNAPTICS_PROP_EDGEMOTION, 8, 1,
                  &para->edge_motion_use_always);
+    prop_edgemotion_scroll =
+        InitAtom(pInfo->dev, SYNAPTICS_PROP_EDGEMOTION_SCROLL, 8, 1,
+                 &para->edge_motion_scroll);
+
 
     if (priv->has_scrollbuttons) {
         values[0] = para->updown_button_scrolling;
@@ -606,6 +611,13 @@ SetProperty(DeviceIntPtr dev, Atom property, XIPropertyValuePtr prop,
             return BadMatch;
 
         para->edge_motion_use_always = *(BOOL *) prop->data;
+
+    }
+    else if (property == prop_edgemotion_scroll) {
+        if (prop->size != 1 || prop->format != 8 || prop->type != XA_INTEGER)
+            return BadMatch;
+
+        para->edge_motion_scroll = *(BOOL *) prop->data;
 
     }
     else if (property == prop_buttonscroll) {
