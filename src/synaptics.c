@@ -2643,7 +2643,8 @@ HandleScrolling(SynapticsPrivate * priv, struct SynapticsHwState *hw,
         priv->scroll.packets_this_scroll++;
     }
 
-    double dtime = (hw->millis - priv->scroll.last_millis) / 1000.0;
+    CARD32 delta_millis = hw->millis - priv->scroll.last_millis;
+    double dtime = ((delta_millis > POLL_MS * 2) ? 0 : delta_millis) / 1000.0;
     int x_edge_speed = 0;
     int y_edge_speed = 0;
     if(para->edge_motion_scroll) get_edge_speed(priv, hw, edge, &x_edge_speed, &y_edge_speed);
